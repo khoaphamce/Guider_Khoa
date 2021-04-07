@@ -8,7 +8,6 @@ from config import *
 
 def FindPath(SP, EP):
     Detail = ''
-    RoomFile = Room
 
     def MPNodeToCoord(NodeIndex):
         CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
@@ -17,12 +16,12 @@ def FindPath(SP, EP):
         cv2.imwrite(f'ToDrawMap/{Name}.jpg', PathImg)
 
     if (SP.upper() == EP.upper()):
-
+    
         StartTime = time.time()
 
         PointCoord = DT.NodeToCoord(DT.NameToNode(SP.upper()))
         print(PointCoord)
-
+    
         CoordList = [PointCoord]
         FlagImage = cv2.imread('Items/flag.png', -1)
         Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
@@ -47,19 +46,20 @@ def FindPath(SP, EP):
             csvReader = csv.reader(FileIn)
             CoordList = [[int(row[0]), int(row[1])] for row in csvReader]
 
-        Ind = DT.GetIndex(RoomFile["Name"], EP.upper())
+        Ind = DT.GetIndex(NameAndNodes["Name"], EP.upper())
 
         if (Ind != -1):
-            print("In Room file")
-            if (type(RoomFile["Describe"][Ind]) == str or type(RoomFile["Describe"][Ind]) == chr):
-                print("Have describe")
-                Detail = RoomFile["Label"][Ind] + " - " + RoomFile["Describe"][Ind]
-            else:
-                print("No describe")
-                Detail = RoomFile["Label"][Ind]
-            print(Detail)
+            if (type(NameAndNodes["Label"][Ind]) == str or type(NameAndNodes["Label"][Ind]) == chr):
+                print("In Room")
+                if (type(NameAndNodes["Describe"][Ind]) == str or type(NameAndNodes["Describe"][Ind]) == chr):
+                    print("Have describe")
+                    Detail = NameAndNodes["Label"][Ind] + " - " + NameAndNodes["Describe"][Ind]
+                else:
+                    print("No describe")
+                    Detail = NameAndNodes["Label"][Ind]
+                print(Detail)
         else:
-            print(EP.upper(), " Not in Room file")
+            print(EP.upper(), " Not in Room")
 
         Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
         Image = Drawing.Path()
@@ -87,19 +87,20 @@ def FindPath(SP, EP):
 
     NodeList = Al.AStar(SN, EN)
     
-    Ind = DT.GetIndex(RoomFile["Name"], EP.upper())
+    Ind = DT.GetIndex(NameAndNodes["Name"], EP.upper())
 
     if (Ind != -1):
-        print("In Room file")
-        if (type(RoomFile["Describe"][Ind]) == str or type(RoomFile["Describe"][Ind]) == chr):
-            print("Have describe")
-            Detail = RoomFile["Label"][Ind] + " - " + RoomFile["Describe"][Ind]
-        else:
-            print("No describe")
-            Detail = RoomFile["Label"][Ind]
-        print(Detail)
+        if (type(NameAndNodes["Label"][Ind]) == str or type(NameAndNodes["Label"][Ind]) == chr):
+            print("In Room")
+            if (type(NameAndNodes["Describe"][Ind]) == str or type(NameAndNodes["Describe"][Ind]) == chr):
+                print("Have describe")
+                Detail = NameAndNodes["Label"][Ind] + " - " + NameAndNodes["Describe"][Ind]
+            else:
+                print("No describe")
+                Detail = NameAndNodes["Label"][Ind]
+            print(Detail)
     else:
-        print("Not in Room file")
+        print(EP.upper(), " Not in Room")
 
     if (NodeList == -1):
         print("Some error occured, try again")
@@ -169,27 +170,27 @@ def UploadGetLink(FileName, SP, EP):
 
 #---------- NORMAL TEST -----------
 
-# Signal = "y"
+Signal = "y"
 
-# while(Signal == 'y' or Signal == 'Y'):
-#     SP = input("Start place: ")
-#     EP = input("End place: ")
+while(Signal == 'y' or Signal == 'Y'):
+    SP = input("Start place: ")
+    EP = input("End place: ")
 
-#     ReturnVal = FindPath(SP, EP)
+    ReturnVal = FindPath(SP, EP)
 
-#     try:
-#         if (ReturnVal == -1):
-#             print("Error occured, try again")
-#             continue
-#     except:
-#         pass
+    try:
+        if (ReturnVal == -1):
+            print("Error occured, try again")
+            continue
+    except:
+        pass
 
-#     Post = input("Upload image ? y, n \n")
+    Post = input("Upload image ? y, n \n")
 
-#     if (Post == 'y' or Post == 'Y'):
-#         UploadGetLink("ToDrawMap/Path.jpg" ,SP, EP)
+    if (Post == 'y' or Post == 'Y'):
+        UploadGetLink("ToDrawMap/Path.jpg" ,SP, EP)
 
-#     Signal = input("Signal: y, n \n")
+    Signal = input("Signal: y, n \n")
 
     #------- FAIL DETECTION --------
 

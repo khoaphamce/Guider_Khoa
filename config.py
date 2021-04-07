@@ -3,9 +3,8 @@ import Backend
 import cv2
 import csv
 
-DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv', 'Room.csv')
+DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
 NameAndNodes = DT.NameNodes()
-Room = DT.Rooms()
 descript_list = []
 des_len = len(NameAndNodes["Name"])
 descript_list = [[str(i+1), NameAndNodes["Name"][i]] for i in range(0, des_len)]

@@ -10,16 +10,11 @@ import qrcode
 
 
 class Data:
-    def __init__(self, NameAndNodes, NodesAndCoord, NodesAndDistance, Room):
+    def __init__(self, NameAndNodes, NodesAndCoord, NodesAndDistance):
         self.NameAndNodes = NameAndNodes
         self.NodesAndCoord = NodesAndCoord
         self.NodesAndDistance = NodesAndDistance
-        self.Room = Room
         
-    def Rooms(self):
-        ReturnValue = pd.read_csv(self.Room)
-        return ReturnValue
-
     def NameNodes(self):
         ReturnValue = pd.read_csv(self.NameAndNodes)
         return ReturnValue
@@ -50,26 +45,20 @@ class Data:
         Ind = self.GetIndex(NodeData['Name'], Name)
 
         if(Ind != -1):
-            return int(NodeData['Node'][Ind])-1
-        else:
-            RoomData = self.Rooms()
-            Ind = self.GetIndex(RoomData["Name"], Name)
-            if (Ind != -1):
-                Ind = self.GetIndex(NodeData["Name"], RoomData["Label"][Ind])
-                if(Ind != -1):
-                    return int(NodeData['Node'][Ind])-1
-                else:
-                    return -1
+            FoundVal = str(NodeData["Node"][Ind])
+            if (FoundVal != "nan"):
+                return int(float(FoundVal)) - 1
             else:
-                return(-1)
-
+                return self.NameToNode(str(NodeData["Label"][Ind]))
+        else:
+            return -1
 
 class Algorithm:
     def __init__ (self, Graph, NodesAndCoord):
         self.Graph = Graph
         self.NodesAndCoord = NodesAndCoord
 
-        DT = Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv', 'Room.csv')
+        DT = Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
         NodesAndDistance = DT.NodesDistance()
         NodesAndCoord = DT.NodesCoord()
         NameAndNodes = DT.NameNodes()
